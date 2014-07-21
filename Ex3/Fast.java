@@ -24,19 +24,16 @@ public class Fast
             p.draw();
         }
         
-        Arrays.sort(points);
-        
-        
+        Arrays.sort(points);   
         
         for (int i=0; i<N; ++i)
         {
             Point p_ori = points[i];
             
             Point[] sameSlopePoints = new Point[N-i];
-            Point[] tmpPoints       = new Point[N-1-i];
-            
             sameSlopePoints[0] = p_ori;
-            
+                    
+            Point[] tmpPoints = new Point[N-1-i];
             for (int j=i+1; j<N; ++j)
                 tmpPoints[j-i-1] = points[j];
             Arrays.sort(tmpPoints, p_ori.SLOPE_ORDER);
@@ -59,13 +56,27 @@ public class Fast
                 {
                     if (count>=4)
                     {
-                        Arrays.sort(sameSlopePoints, 0, count);
-                        sameSlopePoints[0].drawTo(sameSlopePoints[count-1]);
+                        boolean notYetSeen = true;
+                        for (int k=0; k<i; ++k)
+                        {
+                            double oldSlope = points[k].slopeTo(p_ori);
+                            if (oldSlope==currentSlope)
+                            {
+                                notYetSeen = false;
+                                break;
+                            } 
+                        }
                         
-                        String s = sameSlopePoints[0].toString();
-                        for (int k=1; k<count; ++k)
-                            s   +=  " -> " + sameSlopePoints[k].toString();
-                        System.out.println(s);
+                        if (notYetSeen)
+                        {
+                            Arrays.sort(sameSlopePoints, 0, count);
+                            sameSlopePoints[0].drawTo(sameSlopePoints[count-1]);
+                            
+                            String s = sameSlopePoints[0].toString();
+                            for (int k=1; k<count; ++k)
+                                s   +=  " -> " + sameSlopePoints[k].toString();
+                            System.out.println(s);
+                        }
                     }
                     sameSlopePoints[0] = p_ori;
                     sameSlopePoints[1] = pj;
