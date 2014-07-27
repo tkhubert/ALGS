@@ -114,7 +114,7 @@ public class Solver
     }
     //
     public static void main(String[] args)  // solve a slider puzzle (given below)
-    {
+    {     
         // create initial board from file
         In in = new In(args[0]);
         int N = in.readInt();
