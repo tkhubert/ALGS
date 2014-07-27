@@ -102,7 +102,7 @@ public class Solver
             Stack<Board> s  = new Stack<Board>();
             SearchNode node = tree.min();
             
-            while (node.prevNode!=null)
+            while (node!=null)
             {
                 s.push(node.currBoard);
                 node = node.prevNode;    
