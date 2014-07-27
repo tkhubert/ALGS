@@ -1,26 +1,46 @@
-
-
 public class Board 
 {
-    private int     N;
-    private int     zeroI;
-    private int     zeroJ;
-    private int[][] grid;
-    private int     hammingScore;
-    private int     manhattanScore;
+    private int       N;
+    private int       zeroI;
+    private int       zeroJ;
+    private short[][] grid;
+    private int       hammingScore;
+    private int       manhattanScore;
     
     public Board(int[][] blocks)           // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)                                           
+    {
+        if (blocks[0].length>181)
+            throw new java.lang.IndexOutOfBoundsException("grid is too big, should be smaller than 181");
+        
+        N              = blocks[0].length;
+        hammingScore   = 0;
+        manhattanScore = 0;
+        
+        grid = new short[N][N];
+        for (int i=0; i<N; ++i)
+        {
+            for (int j=0; j<N; ++j)
+            {
+                short val  = (short) blocks[i][j];
+                grid[i][j] = val;
+                
+                updateData(i, j, val, 1);
+            }
+        }   
+    }
+    //
+    private Board(short[][] blocks)           // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)                                           
     {
         N              = blocks[0].length;
         hammingScore   = 0;
         manhattanScore = 0;
         
-        grid = new int[N][N];
+        grid = new short[N][N];
         for (int i=0; i<N; ++i)
         {
             for (int j=0; j<N; ++j)
             {
-                int val    = blocks[i][j];
+                short val  = (short) blocks[i][j];
                 grid[i][j] = val;
                 
                 updateData(i, j, val, 1);
@@ -148,8 +168,8 @@ public class Board
     //
     private void swap(int i1, int j1, int i2, int j2)
     {
-        int val1 = grid[i1][j1];
-        int val2 = grid[i2][j2];
+        short val1 = grid[i1][j1];
+        short val2 = grid[i2][j2];
         
         updateData(i1, j1, val1, -1);
         updateData(i2, j2, val2, -1);
