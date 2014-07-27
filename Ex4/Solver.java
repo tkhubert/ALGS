@@ -42,6 +42,8 @@ public class Solver
     {
         isTreeSolved     = false;
         isTreeTwinSolved = false;
+        tree     = new MinPQ<SearchNode>();
+        treeTwin = new MinPQ<SearchNode>();
         
         Board      twinBoard = initial.twin();
         SearchNode node      = new SearchNode(null, initial, 0);
@@ -66,15 +68,14 @@ public class Solver
             return true;
         
         parentNode      = t.delMin();
-        Board prevBoard = parentNode.prevNode.currBoard;
         
         Iterable<Board> childrenBoard = parentBoard.neighbors();
         for (Board childBoard : childrenBoard)
         {
-            if (!childBoard.equals(prevBoard))
+            if (parentNode.prevNode==null || !childBoard.equals(parentNode.prevNode.currBoard))
             {
                 SearchNode childNode = new SearchNode(parentNode, childBoard, parentNode.nbMoves+1);
-                tree.insert(childNode);
+                t.insert(childNode);
             }
         }
         
@@ -114,21 +115,31 @@ public class Solver
     //
     public static void main(String[] args)  // solve a slider puzzle (given below)
     {
-         for (String filename : args) 
-         {
-            In in = new In(filename);
-            int N = in.readInt();
-            int[][] tiles = new int[N][N];
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    tiles[i][j] = in.readInt();
-                }
+        // create initial board from file
+        In in = new In(args[0]);
+        int N = in.readInt();
+        int[][] blocks = new int[N][N];
+        
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                blocks[i][j] = in.readInt();
             }
-
-            // solve the slider puzzle
-            Board initial = new Board(tiles);
-            Solver solver = new Solver(initial);
-            System.out.println(filename + ": " + solver.moves());
+        }
+        Board initial = new Board(blocks);
+        
+        // solve the puzzle
+        Solver solver = new Solver(initial);
+        
+        // print solution to standard output
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else 
+        {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
         }
         
     }

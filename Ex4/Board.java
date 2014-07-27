@@ -73,7 +73,7 @@ public class Board
         
         for (int i=0; i<N; ++i)
         {
-            for (int j=0; i<N; ++j)
+            for (int j=0; j<N; ++j)
             {
                 if (that.grid[i][j] != this.grid[i][j])
                     return false;
