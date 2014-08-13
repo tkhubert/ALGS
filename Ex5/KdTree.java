@@ -152,6 +152,9 @@ public class KdTree
     //
     public Point2D nearest(Point2D p)               // a nearest neighbor in the set to p; null if set is empty
     {
+        if (root==null)
+            return null;
+        
         double  nearestDist  = root.p.distanceSquaredTo(p);
         Point2D nearestPoint = searchForNearest(p, root, root.p, nearestDist);        
         return  nearestPoint;
