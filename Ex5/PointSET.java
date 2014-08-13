@@ -2,7 +2,7 @@
 
 public class PointSET 
 {
-    SET<Point2D> data;
+    private SET<Point2D> data;
     
     public PointSET()                               // construct an empty set of points
     {

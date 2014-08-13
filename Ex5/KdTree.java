@@ -57,18 +57,27 @@ public class KdTree
         {
             boolean searchLeft = SEARCH_AXIS==SEARCH_X ? p.x()<n.p.x() : p.y()<n.p.y();
             
-            double  xmin = (SEARCH_AXIS==SEARCH_X && !searchLeft) ? n.p.x() : rect.xmin();
-            double  xmax = (SEARCH_AXIS==SEARCH_X &&  searchLeft) ? n.p.x() : rect.xmax();
-            double  ymin = (SEARCH_AXIS==SEARCH_Y && !searchLeft) ? n.p.y() : rect.ymin();
-            double  ymax = (SEARCH_AXIS==SEARCH_Y &&  searchLeft) ? n.p.y() : rect.ymax();
-            RectHV  childRect  = new RectHV(xmin, ymin, xmax, ymax); 
-            
             if (searchLeft)
+            {
+                RectHV childRect = n.left==null ? buildRectFromParentNode(n, searchLeft, SEARCH_AXIS) : n.left.rect;
                 n.left = insert(p, n.left, childRect, !SEARCH_AXIS);
+            }
             else
+            {
+                RectHV childRect = n.right==null ? buildRectFromParentNode(n, searchLeft, SEARCH_AXIS) : n.right.rect;
                 n.right = insert(p, n.right, childRect, !SEARCH_AXIS);
+            }
         }
         return n;
+    }
+    //
+    private RectHV buildRectFromParentNode(Node n, boolean searchLeft, boolean SEARCH_AXIS)
+    {
+        double  xmin = (SEARCH_AXIS==SEARCH_X && !searchLeft) ? n.p.x() : n.rect.xmin();
+        double  xmax = (SEARCH_AXIS==SEARCH_X &&  searchLeft) ? n.p.x() : n.rect.xmax();
+        double  ymin = (SEARCH_AXIS==SEARCH_Y && !searchLeft) ? n.p.y() : n.rect.ymin();
+        double  ymax = (SEARCH_AXIS==SEARCH_Y &&  searchLeft) ? n.p.y() : n.rect.ymax();
+        return new RectHV(xmin, ymin, xmax, ymax); 
     }
     //
     public boolean contains(Point2D p)              // does the set contain the point p?
@@ -102,10 +111,10 @@ public class KdTree
             return;
         
         StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.1);
+        StdDraw.setPenRadius(0.01);
         n.p.draw();
         
-        StdDraw.setPenRadius(0.01);
+        StdDraw.setPenRadius();
         if (SEARCH_AXIS==SEARCH_X)
         {
             StdDraw.setPenColor(StdDraw.RED);
@@ -143,9 +152,9 @@ public class KdTree
     //
     public Point2D nearest(Point2D p)               // a nearest neighbor in the set to p; null if set is empty
     {
-        double nearestDist = root.p.distanceSquaredTo(p);
+        double  nearestDist  = root.p.distanceSquaredTo(p);
         Point2D nearestPoint = searchForNearest(p, root, root.p, nearestDist);        
-        return nearestPoint;
+        return  nearestPoint;
     }
     //
     private Point2D searchForNearest(Point2D p, Node n, Point2D currentBestPoint, double currentBestDist)
