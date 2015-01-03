@@ -1,10 +1,8 @@
 public class BoggleSolver
 {
     private TrieSET     dict;
-    
-    private BoggleBoard board;
-    private Node[]      nodeBoard;
 
+    private Node[]      nodeBoard;
     private int         r;
     private int         c;
     
@@ -45,8 +43,7 @@ public class BoggleSolver
     public Iterable<String> getAllValidWords(BoggleBoard board)
     {
         words = new SET<String>();
-        
-        this.board = board;
+
         r = board.rows();
         c = board.cols();
         nodeBoard = new Node[r*c];
